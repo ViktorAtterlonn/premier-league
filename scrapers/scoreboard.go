@@ -33,8 +33,11 @@ func ScrapeScoreboard() {
 	c.OnHTML("tr.widget-match-standings__row", func(e *colly.HTMLElement) {
 		log.Println(e.ChildText("span.widget-match-standings__team--full-name"))
 
+		name := e.ChildText("span.widget-match-standings__team--full-name")
+
 		team := database.Team{
-			Name:           e.ChildText("span.widget-match-standings__team--full-name"),
+			Name:           name,
+			Avatar:         "/public/images/teams/" + getTeamFileName(name) + getTeamFileExtension((name)),
 			MatchesPlayed:  toInt(e.ChildText("td.widget-match-standings__matches-played")),
 			MatchesWon:     toInt(e.ChildText("td.widget-match-standings__matches-won")),
 			MatchesDrawn:   toInt(e.ChildText("td.widget-match-standings__matches-drawn")),

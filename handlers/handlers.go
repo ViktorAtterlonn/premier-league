@@ -39,5 +39,11 @@ func (h *Handler) HandleGetTeams(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) HandleRenderTeamsPage(w http.ResponseWriter, r *http.Request) {
-	h.r.HTML(w, http.StatusOK, "index", h.db.GetTeams())
+	data := map[string]interface{}{
+		"teams":       h.db.GetTeams(),
+		"liveMatches": h.db.GetLiveMatches(),
+		"scoreboard":  h.db.GetScoreboard(),
+	}
+
+	h.r.HTML(w, http.StatusOK, "index", data)
 }

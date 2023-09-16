@@ -112,8 +112,53 @@
 
   <section id="scoreboard">
     <div class="flex">
-      <h1>Live <span>Matches</span></h1>
-      <button>View all</button>
+      <h1>Scoreboard</h1>
+    </div>
+    <div>
+
+
+      <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+        <table class="min-w-full divide-y divide-gray-300">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                Team</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Points</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Played</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Won</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Drawn</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Lost</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Goals for</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Goals against
+              </th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Diff</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 bg-white">
+            {{range .scoreboard}}
+            <tr>
+              <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                <img src="{{.Avatar}}" alt="logo" class="w-6 h-6 inline-block mr-2">
+                {{.Name}}
+              </td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.Points}}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.MatchesPlayed}}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.MatchesWon}}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.MatchesLost}}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.MatchesDrawn}}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.GoalsFor}}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.GoalsAgainst}}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.GoalDifference}}</td>
+
+            </tr>
+            {{end}}
+
+            <!-- More people... -->
+          </tbody>
+        </table>
+      </div>
+
+
     </div>
   </section>
 </main>

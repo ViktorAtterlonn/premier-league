@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"time"
 )
 
 type Database struct {
@@ -76,6 +77,23 @@ func (d *Database) LoadModels() error {
 
 func (d *Database) GetMatches() []Match {
 	return d.matches
+}
+
+func (d *Database) GetLiveMatches() []Match {
+	currentTime := time.Now()
+	matchDuration, _ := time.ParseDuration("90m")
+
+	var liveMatches []Match
+
+	for _, match := range d.matches {
+		matchTime, _ := time.Parse(time.RFC3339, match.Date)
+
+		if matchTime.Before(currentTime) && matchTime.Add(matchDuration).After(currentTime) {
+			liveMatches = append(liveMatches, match)
+		}
+	}
+
+	return liveMatches
 }
 
 func (d *Database) GetTeams() []Team {
