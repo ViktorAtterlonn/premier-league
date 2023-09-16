@@ -1,0 +1,4 @@
+scraper
+premierleague_cache
+database/*.json
+.vscode/*
