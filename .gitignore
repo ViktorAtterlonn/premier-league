@@ -2,3 +2,5 @@ scraper
 premierleague_cache
 database/*.json
 .vscode/*
+node_modules
+public/tailwind.css
