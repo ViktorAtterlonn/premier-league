@@ -1,7 +1,6 @@
 package scrapers
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -13,7 +12,7 @@ import (
 	"github.com/gocolly/colly/v2"
 )
 
-func ScrapeTeams() {
+func (s *Scraper) ScrapeTeams() {
 
 	file, err := openFile("teams.json")
 
@@ -24,7 +23,7 @@ func ScrapeTeams() {
 	defer file.Close()
 
 	// Instantiate default collector
-	c := getCollector()
+	c := getCachedCollector()
 
 	// Before making a request print "Visiting ..."
 	c.OnRequest(func(r *colly.Request) {
@@ -44,16 +43,13 @@ func ScrapeTeams() {
 		downloadImage(team.Avatar, getTeamFileName(team.Name))
 
 		teams = append(teams, team)
+
+		if err := s.db.SaveTeam(team); err != nil {
+			fmt.Println("Error writing team to database:", err)
+		}
 	})
 
 	c.Visit("https://www.premierleague.com/fixtures")
-
-	// Write teams to JSON file
-	enc := json.NewEncoder(file)
-	enc.SetIndent("", "  ")
-
-	// Dump json to the standard output
-	enc.Encode(teams)
 }
 
 func getTeamFileName(teamName string) string {

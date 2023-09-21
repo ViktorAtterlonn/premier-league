@@ -3,9 +3,22 @@ package scrapers
 import (
 	"log"
 	"os"
+	"scraper/database"
 
 	"github.com/gocolly/colly/v2"
 )
+
+type Scraper struct {
+	db *database.Database
+}
+
+func NewScraper() *Scraper {
+	return &Scraper{}
+}
+
+func (s *Scraper) SetDb(db *database.Database) {
+	s.db = db
+}
 
 func openFile(fName string) (*os.File, error) {
 	file, err := os.Create("database/" + fName)
@@ -17,6 +30,14 @@ func openFile(fName string) (*os.File, error) {
 }
 
 func getCollector() *colly.Collector {
+	c := colly.NewCollector(
+		colly.AllowedDomains("goal.com", "www.goal.com", "www.premierleague.com", "premierleague.com"),
+	)
+
+	return c
+}
+
+func getCachedCollector() *colly.Collector {
 	c := colly.NewCollector(
 		colly.AllowedDomains("goal.com", "www.goal.com", "www.premierleague.com", "premierleague.com"),
 		colly.CacheDir("./premierleague_cache"),

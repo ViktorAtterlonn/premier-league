@@ -4,21 +4,33 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
-	"time"
+
+	scribble "github.com/nanobox-io/golang-scribble"
 )
 
 type Database struct {
+	Db         *scribble.Driver
 	matches    []Match
 	teams      []Team
 	scoreboard []Team
+	schedule   []PeacockSchedule
 }
 
 func NewDatabase() *Database {
+	db, err := scribble.New("./local", nil)
+
+	if err != nil {
+		log.Panicf("Error creating database: %s", err)
+	}
+
 	return &Database{
+		Db:         db,
 		matches:    []Match{},
 		teams:      []Team{},
 		scoreboard: []Team{},
+		schedule:   []PeacockSchedule{},
 	}
 }
 
@@ -26,6 +38,7 @@ func (d *Database) LoadModels() error {
 	var matches []Match
 	var scoreboard []Team
 	var teams []Team
+	var schedule []PeacockSchedule
 
 	// Load models
 	matchesData, err := readFile("matches.json")
@@ -62,46 +75,30 @@ func (d *Database) LoadModels() error {
 		return err
 	}
 
+	scheduleData, err := readFile("peacock-schedule.json")
+	if err != nil {
+		fmt.Println("Error reading peacock-schedule.json:", err)
+		return err
+	}
+
+	if err := json.Unmarshal(scheduleData, &schedule); err != nil {
+		fmt.Println("Error unmarshalling peacock-schedule.json:", err)
+		return err
+	}
+
 	d.matches = matches
 	d.teams = teams
 	d.scoreboard = scoreboard
+	d.schedule = schedule
 
 	fmt.Println("✨ Database loaded")
 
 	fmt.Printf("Matches: %d\n", len(matches))
 	fmt.Printf("Teams: %d\n", len(teams))
 	fmt.Printf("Scoreboard: %d\n", len(scoreboard))
+	fmt.Printf("Peacock Schedule: %d\n", len(schedule))
 
 	return nil
-}
-
-func (d *Database) GetMatches() []Match {
-	return d.matches
-}
-
-func (d *Database) GetLiveMatches() []Match {
-	currentTime := time.Now()
-	matchDuration, _ := time.ParseDuration("90m")
-
-	var liveMatches []Match
-
-	for _, match := range d.matches {
-		matchTime, _ := time.Parse(time.RFC3339, match.Date)
-
-		if matchTime.Before(currentTime) && matchTime.Add(matchDuration).After(currentTime) {
-			liveMatches = append(liveMatches, match)
-		}
-	}
-
-	return liveMatches
-}
-
-func (d *Database) GetTeams() []Team {
-	return d.teams
-}
-
-func (d *Database) GetScoreboard() []Team {
-	return d.scoreboard
 }
 
 func readFile(name string) ([]byte, error) {

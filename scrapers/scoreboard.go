@@ -1,15 +1,14 @@
 package scrapers
 
 import (
-	"encoding/json"
 	"log"
 	"scraper/database"
-	"strconv"
+	"scraper/utils"
 
 	"github.com/gocolly/colly/v2"
 )
 
-func ScrapeScoreboard() {
+func (s *Scraper) ScrapeScoreboard() {
 	//https://www.premierleague.com/fixtures
 
 	file, err := openFile("scoreboard.json")
@@ -38,36 +37,22 @@ func ScrapeScoreboard() {
 		team := database.Team{
 			Name:           name,
 			Avatar:         "/public/images/teams/" + getTeamFileName(name) + getTeamFileExtension((name)),
-			MatchesPlayed:  toInt(e.ChildText("td.widget-match-standings__matches-played")),
-			MatchesWon:     toInt(e.ChildText("td.widget-match-standings__matches-won")),
-			MatchesDrawn:   toInt(e.ChildText("td.widget-match-standings__matches-drawn")),
-			MatchesLost:    toInt(e.ChildText("td.widget-match-standings__matches-lost")),
-			GoalsFor:       toInt(e.ChildText("td.widget-match-standings__goals-for")),
-			GoalsAgainst:   toInt(e.ChildText("td.widget-match-standings__goals-against")),
-			GoalDifference: toInt(e.ChildText("td.widget-match-standings__goals-diff")),
-			Points:         toInt(e.ChildText("td.widget-match-standings__pts")),
+			MatchesPlayed:  utils.ToInt(e.ChildText("td.widget-match-standings__matches-played")),
+			MatchesWon:     utils.ToInt(e.ChildText("td.widget-match-standings__matches-won")),
+			MatchesDrawn:   utils.ToInt(e.ChildText("td.widget-match-standings__matches-drawn")),
+			MatchesLost:    utils.ToInt(e.ChildText("td.widget-match-standings__matches-lost")),
+			GoalsFor:       utils.ToInt(e.ChildText("td.widget-match-standings__goals-for")),
+			GoalsAgainst:   utils.ToInt(e.ChildText("td.widget-match-standings__goals-against")),
+			GoalDifference: utils.ToInt(e.ChildText("td.widget-match-standings__goals-diff")),
+			Points:         utils.ToInt(e.ChildText("td.widget-match-standings__pts")),
 		}
 
 		scoreboard = append(scoreboard, team)
-
 	})
 
 	c.Visit("https://www.goal.com/en/premier-league/table/2kwbbcootiqqgmrzs6o5inle5")
 
-	// Write teams to JSON file
-	enc := json.NewEncoder(file)
-	enc.SetIndent("", "  ")
-
-	// Dump json to the standard output
-	enc.Encode(scoreboard)
-}
-
-func toInt(str string) int {
-	intVar, err := strconv.Atoi(str)
-
-	if err != nil {
-		return 0
+	if err := s.db.SaveScoreboard(scoreboard); err != nil {
+		log.Println("Error writing scoreboard to database:", err)
 	}
-
-	return intVar
 }

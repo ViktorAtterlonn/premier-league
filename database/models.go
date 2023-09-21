@@ -25,3 +25,12 @@ type Team struct {
 	GoalDifference int    `json:"goalDifference"`
 	Points         int    `json:"points"`
 }
+
+type PeacockSchedule struct {
+	Name     string `json:"name"`
+	HomeTeam string `json:"homeTeam"`
+	AwayTeam string `json:"awayTeam"`
+	Day      string `json:"day"`
+	Time     string `json:"time"`
+	IsReplay bool   `json:"isReplay"`
+}

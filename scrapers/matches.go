@@ -1,7 +1,7 @@
 package scrapers
 
 import (
-	"encoding/json"
+	"fmt"
 	"log"
 	"net/url"
 	"scraper/database"
@@ -10,7 +10,7 @@ import (
 	"github.com/gocolly/colly/v2"
 )
 
-func ScrapeMatches() {
+func (s *Scraper) ScrapeMatches() {
 	//https://www.premierleague.com/fixtures
 
 	file, err := openFile("matches.json")
@@ -22,7 +22,7 @@ func ScrapeMatches() {
 	defer file.Close()
 
 	// Instantiate default collector
-	c := getCollector()
+	c := getCachedCollector()
 
 	// Before making a request print "Visiting ..."
 	c.OnRequest(func(r *colly.Request) {
@@ -42,6 +42,10 @@ func ScrapeMatches() {
 		}
 
 		matches = append(matches, match)
+
+		if err := s.db.SaveMatch(match); err != nil {
+			fmt.Println("Error writing match to database:", err)
+		}
 	})
 
 	visited := make(map[string]bool)
@@ -54,9 +58,9 @@ func ScrapeMatches() {
 			return
 		}
 
-		if len(visited) > 20 {
-			return
-		}
+		// if len(visited) > 20 {
+		// 	return
+		// }
 
 		visited[nextUrl] = true
 
@@ -67,12 +71,6 @@ func ScrapeMatches() {
 
 	c.Visit("https://www.goal.com/en/premier-league/fixtures-results/2kwbbcootiqqgmrzs6o5inle5")
 
-	// Write teams to JSON file
-	enc := json.NewEncoder(file)
-	enc.SetIndent("", "  ")
-
-	// Dump json to the standard output
-	enc.Encode(matches)
 }
 
 // https://www.goal.com/en/ajax/competition/matches/2kwbbcootiqqgmrzs6o5inle5?date=2023-09-18%2018%3A45%3A00&calendarId=1jt5mxgn4q5r6mknmlqv5qjh0

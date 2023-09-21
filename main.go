@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"scraper/database"
 	"scraper/handlers"
+	"scraper/jobs"
 	"scraper/scrapers"
 	"scraper/server"
 )
@@ -12,15 +12,20 @@ import (
 func main() {
 	fmt.Println("Starting scraper")
 
-	scrapers.ScrapeTeams()
-	scrapers.ScrapeScoreboard()
-	scrapers.ScrapeMatches()
-
 	db := database.NewDatabase()
 
-	if err := db.LoadModels(); err != nil {
-		log.Fatal(err)
-	}
+	scraper := scrapers.NewScraper()
+	scraper.SetDb(db)
+
+	scraper.ScrapeTeams()
+	scraper.ScrapeScoreboard()
+	scraper.ScrapeMatches()
+	scraper.ScrapePeacockSchedule()
+
+	runner := jobs.NewRunner()
+	runner.SetScraper(scraper)
+	runner.SetupJobs()
+	runner.Run()
 
 	handler := handlers.NewHandler()
 	handler.SetDb(db)

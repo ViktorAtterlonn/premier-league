@@ -9,7 +9,7 @@ func (s *Server) Routes() {
 	s.router.Get("/api/matches", s.handler.HandleGetMatches)
 	s.router.Get("/api/teams", s.handler.HandleGetTeams)
 
-	s.router.Get("/teams", s.handler.HandleRenderTeamsPage)
+	s.router.Get("/", s.handler.HandleRenderTeamsPage)
 }
 
 func (s *Server) staticFiles() {

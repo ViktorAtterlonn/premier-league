@@ -1,154 +1,192 @@
 <main class="font-sans antialiased w-full">
-  <section id="matches">
-    <div class="flex">
-      <h1>Live <span>Matches</span></h1>
-      <button>View all</button>
+
+  <section id="matches" class="mb-12">
+    <div class="flex mb-4 relative gap-2 align-center">
+      <h1 class="font-bold text-xl"><span class="">Live</span></h1>
     </div>
     <div class="grid grid-cols-3 gap-4">
-      <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow">
-        <div class="px-4 py-5 sm:px-6">
-          <span class="inline-flex items-center rounded bg-red-600 px-2 py-1 text-xs font-medium text-white">Live</span>
+      {{range .liveMatches}}
+      <div class="px-4 py-6 sm:px-6 lg:px-8 border rounded-md border-gray-400/20">
+        <div class="teams mb-6">
+          <div class="flex align-center justify-between mb-4">
+            <div class="flex align-center">
+              <img class="avatar inline-block h-7 w-7 mr-2" src="{{getTeamImage .HomeTeam}}" alt="logo">
+              <span>{{.HomeTeam}}</span>
+            </div>
+            <span>3</span>
+          </div>
+          <div class="flex align-center justify-between">
+            <div class="flex align-center">
+              <img class="avatar inline-block h-7 w-7 mr-2" src="{{getTeamImage .AwayTeam}}" alt="logo">
+              <span>{{.AwayTeam}}</span>
+            </div>
+            <span>1</span>
+          </div>
         </div>
-        <div class="px-4 py-5 sm:p-6 flex flex-col gap-4">
-          <div class="avatars flex gap-4 items-center justify-center">
-            <div class="avatar inline-block h-14 w-14 rounded-full bg-white p-2 shadow">
-              <img src="https://resources.premierleague.com/premierleague/badges/rb/t3.svg" alt="avatar">
-            </div>
-            <span class="font-bold">vs</span>
-            <div class="avatar inline-block h-14 w-14 rounded-full bg-white p-2 shadow">
-              <img src="https://resources.premierleague.com/premierleague/badges/rb/t3.svg" alt="avatar">
-            </div>
-          </div>
-          <div class="progress">
-            <div class="w-full flex gap-[2px]">
-              <div class="bg-red-600 w-[40%] h-[4px] rounded-[8px]"></div>
-              <div class="bg-black/40 w-[60%] h-[4px] rounded-[8px]"></div>
-            </div>
-          </div>
-          <div class="scores">
-            <div class="flex justify-between">
-              <span class="font-bold">Chelsea</span>
-              <span>3</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="font-bold">Manchester Unites</span>
-              <span>1</span>
-            </div>
+        <div class="time text-white mb-2 text-xs font-semibold">
+          {{getMatchTime .date}}
+        </div>
+        <div class="progress">
+          <div class="w-full flex gap-[2px]">
+            <div class="bg-primary w-[{{getMatchElapsedPercent .date}}%] h-[2px] rounded-[8px]"></div>
+            <div class="bg-gray-400/20 w-[{{getMatchRemainingPercent .date}}%] h-[2px] rounded-[8px]"></div>
           </div>
         </div>
       </div>
 
-      <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow">
-        <div class="px-4 py-5 sm:px-6">
-          <span class="inline-flex items-center rounded bg-red-600 px-2 py-1 text-xs font-medium text-white">Live</span>
+      {{end}}
+      <div class="px-4 py-6 sm:px-6 lg:px-8 border rounded-md border-gray-400/20">
+        <div class="teams mb-6">
+          <div class="flex align-center justify-between mb-4">
+            <div class="flex align-center">
+              <img class="avatar inline-block h-7 w-7 mr-2" src="/public/images/teams/manchester-city.svg" alt="logo">
+              <span>Manchester City</span>
+            </div>
+            <span>3</span>
+          </div>
+          <div class="flex align-center justify-between">
+            <div class="flex align-center">
+              <img class="avatar inline-block h-7 w-7 mr-2" src="/public/images/teams/burnley.svg" alt="logo">
+              <span>Burnley</span>
+            </div>
+            <span>1</span>
+          </div>
         </div>
-        <div class="px-4 py-5 sm:p-6 flex flex-col gap-4">
-          <div class="avatars flex gap-4 items-center justify-center">
-            <div
-              class="avatar inline-block h-14 w-14 rounded-full bg-white p-2 shadow flex items-center justify-center">
-              <img class="w-3/4 h-3/4" src="https://resources.premierleague.com/premierleague/badges/rb/t3.svg"
-                alt="avatar">
-            </div>
-            <span class="font-bold">vs</span>
-            <div
-              class="avatar inline-block h-14 w-14 rounded-full bg-white p-2 shadow flex items-center justify-center">
-              <img class="w-3/4 h-3/4" src="https://resources.premierleague.com/premierleague/badges/rb/t7.svg"
-                alt="avatar">
-            </div>
+        <div class="time text-white mb-2 text-xs font-semibold">
+          {{getMatchTime "2023-09-19T20:00:00Z"}}
+        </div>
+        <div class="progress">
+          <div class="w-full flex gap-[2px]">
+            <div class="bg-primary w-[40%] h-[2px] rounded-[8px]"></div>
+            <div class="bg-gray-400/20 w-[60%] h-[2px] rounded-[8px]"></div>
           </div>
-          <div class="progress">
-            <div class="w-full flex gap-[2px]">
-              <div class="bg-red-600 w-[40%] h-[4px] rounded-[8px]"></div>
-              <div class="bg-black/40 w-[60%] h-[4px] rounded-[8px]"></div>
+        </div>
+      </div>
+      <div class="px-4 py-6 sm:px-6 lg:px-8 border rounded-md border-gray-400/20">
+        <div class="teams mb-6">
+          <div class="flex align-center justify-between mb-4">
+            <div class="flex align-center">
+              <img class="avatar inline-block h-7 w-7 mr-2" src="/public/images/teams/manchester-city.svg" alt="logo">
+              <span>Manchester City</span>
             </div>
+            <span>3</span>
           </div>
-          <div class="scores">
-            <div class="flex justify-between">
-              <span class="font-bold">Chelsea</span>
-              <span>3</span>
+          <div class="flex align-center justify-between">
+            <div class="flex align-center">
+              <img class="avatar inline-block h-7 w-7 mr-2" src="/public/images/teams/burnley.svg" alt="logo">
+              <span>Burnley</span>
             </div>
-            <div class="flex justify-between">
-              <span class="font-bold">Manchester Unites</span>
-              <span>1</span>
+            <span>1</span>
+          </div>
+        </div>
+        <div class="time text-white mb-2 text-xs font-semibold">
+          {{getMatchTime "2023-09-19T20:00:00Z"}}
+        </div>
+        <div class="progress">
+          <div class="w-full flex gap-[2px]">
+            <div class="bg-primary w-[40%] h-[2px] rounded-[8px]"></div>
+            <div class="bg-gray-400/20 w-[60%] h-[2px] rounded-[8px]"></div>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 py-6 sm:px-6 lg:px-8 border rounded-md border-gray-400/20">
+        <div class="teams mb-6">
+          <div class="flex align-center justify-between mb-4">
+            <div class="flex align-center">
+              <img class="avatar inline-block h-7 w-7 mr-2" src="/public/images/teams/manchester-city.svg" alt="logo">
+              <span>Manchester City</span>
             </div>
+            <span>3</span>
+          </div>
+          <div class="flex align-center justify-between">
+            <div class="flex align-center">
+              <img class="avatar inline-block h-7 w-7 mr-2" src="/public/images/teams/burnley.svg" alt="logo">
+              <span>Burnley</span>
+            </div>
+            <span>1</span>
+          </div>
+        </div>
+        <div class="time text-white mb-2 text-xs font-semibold">
+          {{getMatchTime "2023-09-19T20:00:00Z"}}
+        </div>
+        <div class="progress">
+          <div class="w-full flex gap-[2px]">
+            <div class="bg-primary w-[40%] h-[2px] rounded-[8px]"></div>
+            <div class="bg-gray-400/20 w-[60%] h-[2px] rounded-[8px]"></div>
           </div>
         </div>
       </div>
 
-      <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow">
-        <div class="px-4 py-5 sm:px-6">
-          <span class="inline-flex items-center rounded bg-red-600 px-2 py-1 text-xs font-medium text-white">Live</span>
-        </div>
-        <div class="px-4 py-5 sm:p-6 flex flex-col gap-4">
-          <div class="avatars flex gap-4 items-center justify-center">
-            <div class="avatar inline-block h-14 w-14 rounded-full bg-white p-2 shadow">
-              <img src="https://resources.premierleague.com/premierleague/badges/rb/t3.svg" alt="avatar">
-            </div>
-            <span class="font-bold">vs</span>
-            <div class="avatar inline-block h-14 w-14 rounded-full bg-white p-2 shadow">
-              <img src="https://resources.premierleague.com/premierleague/badges/rb/t3.svg" alt="avatar">
-            </div>
+    </div>
+  </section>
+
+  <section id="matches" class="mb-12">
+    <div class="flex justify-between mb-4">
+      <h1 class="font-bold text-xl">{{.week}}</h1>
+      <button class="text-white/50 text-sm">View all</button>
+    </div>
+    <div class="grid grid-cols-2 gap-4 w-full">
+      {{range .upcoming}}
+      <div
+        class="flex flex-col align-center justify-between gap-4 px-2 py-4 sm:px-6 lg:px-8 border rounded-md border-gray-400/20">
+        <div class="text-white/50">{{formatDate .Date}}</div>
+        <div class="flex align-center gap-4">
+          <div>
+            <img src="{{getTeamImage .HomeTeam}}" alt="logo" class="w-5 h-5 inline-block mr-2">
+            <span class="">{{.HomeTeam}}</span>
           </div>
-          <div class="progress">
-            <div class="w-full flex gap-[2px]">
-              <div class="bg-red-600 w-[40%] h-[4px] rounded-[8px]"></div>
-              <div class="bg-black/40 w-[60%] h-[4px] rounded-[8px]"></div>
-            </div>
-          </div>
-          <div class="scores">
-            <div class="flex justify-between">
-              <span class="font-bold">Chelsea</span>
-              <span>3</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="font-bold">Manchester Unites</span>
-              <span>1</span>
-            </div>
+          <span class="font-bold text-primary"> vs </span>
+          <div>
+            <img src="{{getTeamImage .AwayTeam}}" alt="logo" class="w-5 h-5 inline-block mr-2">
+            {{.AwayTeam}}
           </div>
         </div>
+
+
       </div>
+      {{end}}
     </div>
   </section>
 
   <section id="scoreboard">
     <div class="flex">
-      <h1>Scoreboard</h1>
+      <!-- <h1>Scoreboard</h1> -->
     </div>
     <div>
 
 
       <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-        <table class="min-w-full divide-y divide-gray-300">
-          <thead class="bg-gray-50">
+        <table class="min-w-full divide-y divide-gray-400/20">
+          <thead class="">
             <tr>
-              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold sm:pl-0">
                 Team</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Points</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Played</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Won</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Drawn</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Lost</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Goals for</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Goals against
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Points</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Played</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Won</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Drawn</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Lost</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Goals for</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Goals against
               </th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Diff</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Diff</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-200 bg-white">
+          <tbody class="divide-y divide-gray-400/20">
             {{range .scoreboard}}
             <tr>
-              <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+              <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-0">
                 <img src="{{.Avatar}}" alt="logo" class="w-6 h-6 inline-block mr-2">
                 {{.Name}}
               </td>
-              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.Points}}</td>
-              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.MatchesPlayed}}</td>
-              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.MatchesWon}}</td>
-              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.MatchesLost}}</td>
-              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.MatchesDrawn}}</td>
-              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.GoalsFor}}</td>
-              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.GoalsAgainst}}</td>
-              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{.GoalDifference}}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">{{.Points}}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">{{.MatchesPlayed}}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">{{.MatchesWon}}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">{{.MatchesLost}}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">{{.MatchesDrawn}}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">{{.GoalsFor}}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">{{.GoalsAgainst}}</td>
+              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">{{.GoalDifference}}</td>
 
             </tr>
             {{end}}

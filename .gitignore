@@ -5,3 +5,4 @@ database/*.json
 node_modules
 templates/public/tailwind.css
 .DS_Store
+local
