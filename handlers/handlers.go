@@ -31,6 +31,7 @@ func NewHandler() *Handler {
 					"getMatchRemainingPercent": getMatchRemainingPercent,
 					"getDoesAirOnPeacock":      getDoesAirOnPeacock,
 					"getIsReplayOnPeacock":     getIsReplayOnPeacock,
+					"getTeamPosition":          getTeamPosition,
 				},
 			},
 		}),
@@ -157,6 +158,16 @@ func getTeamNickName(teamName string) string {
 	}
 
 	return teamName
+}
+
+func getTeamPosition(teamName string, scoreboard []database.Team) int {
+	for index, item := range scoreboard {
+		if item.Name == teamName {
+			return index + 1
+		}
+	}
+
+	return 0
 }
 
 func (h *Handler) SetDb(db *database.Database) {

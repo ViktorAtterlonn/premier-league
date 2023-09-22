@@ -129,7 +129,7 @@
 
       {{range .upcoming}}
       <div
-        class="flex relative flex-col align-center justify-between gap-4 px-2 py-4 sm:px-6 lg:px-8 border rounded-md border-gray-400/20">
+        class="flex relative flex-col align-center justify-between gap-5 px-2 py-4 sm:px-6 lg:px-8 border rounded-md border-gray-400/20">
         {{if getDoesAirOnPeacock . $.schedule}}
         <img src="/public/images/peacock.svg" alt="logo" class="absolute right-4 w-12 h-5 inline-block mr-2">
         {{end}}
@@ -141,12 +141,18 @@
         <div class="flex align-center gap-4">
           <div>
             <img src="{{getTeamImage .HomeTeam}}" alt="logo" class="w-5 h-5 inline-block mr-2">
-            <span class="">{{.HomeTeam}}</span>
+            <span class="relative">{{.HomeTeam}} <span
+                class="absolute right-0 top-[-16px] text-xs text-white/40">#{{getTeamPosition
+                .HomeTeam
+                $.scoreboard}}</span></span>
           </div>
           <span class="font-bold text-primary"> vs </span>
           <div>
             <img src="{{getTeamImage .AwayTeam}}" alt="logo" class="w-5 h-5 inline-block mr-2">
-            {{.AwayTeam}}
+            <span class="relative">{{.AwayTeam}} <span
+                class="absolute right-0 top-[-16px] text-xs text-white/40">#{{getTeamPosition
+                .AwayTeam
+                $.scoreboard}}</span></span>
           </div>
         </div>
 
