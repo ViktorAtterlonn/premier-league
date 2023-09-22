@@ -114,6 +114,24 @@ func (d *Database) SavePeacockScheduleItem(schedule PeacockSchedule) error {
 	return d.Db.Write("schedule", schedule.Name+schedule.Day+schedule.Time, schedule)
 }
 
+func (d *Database) GetPeacockSchedule() []PeacockSchedule {
+	records, err := d.Db.ReadAll("schedule")
+	if err != nil {
+		fmt.Println("Error", err)
+	}
+
+	schedule := []PeacockSchedule{}
+	for _, f := range records {
+		item := PeacockSchedule{}
+		if err := json.Unmarshal([]byte(f), &item); err != nil {
+			fmt.Println("Error", err)
+		}
+		schedule = append(schedule, item)
+	}
+
+	return schedule
+}
+
 func (d *Database) GetAllMatches() []Match {
 	records, err := d.Db.ReadAll("matches")
 	if err != nil {

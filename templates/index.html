@@ -35,7 +35,7 @@
       </div>
 
       {{end}}
-      <div class="px-4 py-6 sm:px-6 lg:px-8 border rounded-md border-gray-400/20">
+      <!-- <div class="px-4 py-6 sm:px-6 lg:px-8 border rounded-md border-gray-400/20">
         <div class="teams mb-6">
           <div class="flex align-center justify-between mb-4">
             <div class="flex align-center">
@@ -115,7 +115,7 @@
             <div class="bg-gray-400/20 w-[60%] h-[2px] rounded-[8px]"></div>
           </div>
         </div>
-      </div>
+      </div> -->
 
     </div>
   </section>
@@ -126,9 +126,17 @@
       <button class="text-white/50 text-sm">View all</button>
     </div>
     <div class="grid grid-cols-2 gap-4 w-full">
+
       {{range .upcoming}}
       <div
-        class="flex flex-col align-center justify-between gap-4 px-2 py-4 sm:px-6 lg:px-8 border rounded-md border-gray-400/20">
+        class="flex relative flex-col align-center justify-between gap-4 px-2 py-4 sm:px-6 lg:px-8 border rounded-md border-gray-400/20">
+        {{if getDoesAirOnPeacock . $.schedule}}
+        <img src="/public/images/peacock.svg" alt="logo" class="absolute right-4 w-12 h-5 inline-block mr-2">
+        {{end}}
+        {{if getIsReplayOnPeacock . $.schedule}}
+        <span
+          class="absolute right-20 inline-flex items-center rounded-full bg-blue-800/20 px-1.5 py-0.5 text-xs text-blue-700 ring-1 ring-inset ring-purple-700/10">Replay</span>
+        {{end}}
         <div class="text-white/50">{{formatDate .Date}}</div>
         <div class="flex align-center gap-4">
           <div>
@@ -145,6 +153,7 @@
 
       </div>
       {{end}}
+
     </div>
   </section>
 

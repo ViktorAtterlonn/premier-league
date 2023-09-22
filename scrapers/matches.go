@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"scraper/database"
 	"strings"
+	"time"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -38,7 +39,7 @@ func (s *Scraper) ScrapeMatches() {
 			Location: e.ChildAttr("meta[itemprop=location]", "content"),
 			HomeTeam: e.ChildText("div.team-home > span.team-name"),
 			AwayTeam: e.ChildText("div.team-away > span.team-name"),
-			Date:     e.ChildAttr("meta[itemprop=startDate]", "content"),
+			Date:     parseDateToCETDate(e.ChildAttr("meta[itemprop=startDate]", "content")),
 		}
 
 		matches = append(matches, match)
@@ -70,7 +71,35 @@ func (s *Scraper) ScrapeMatches() {
 	})
 
 	c.Visit("https://www.goal.com/en/premier-league/fixtures-results/2kwbbcootiqqgmrzs6o5inle5")
+}
 
+// 2023-09-23T14:00:00Z -> 2023-09-23 16:00:00
+func parseDateToCETDate(timeValue string) string {
+	etLocation, err := time.LoadLocation("America/New_York")
+
+	if err != nil {
+		fmt.Println("Error loading Eastern Time location:", err)
+		return ""
+	}
+
+	etTime, err := time.Parse(time.RFC3339, timeValue)
+
+	if err != nil {
+		fmt.Println("Error parsing time:", err)
+		return ""
+	}
+
+	etTime = etTime.In(etLocation)
+
+	// Convert the time to Central European Time (CET)
+	cetLocation, err := time.LoadLocation("Europe/Berlin")
+	if err != nil {
+		fmt.Println("Error loading Central European Time location:", err)
+		return ""
+	}
+	cetTime := etTime.In(cetLocation)
+
+	return cetTime.Format("2006-01-02T15:04:05Z")
 }
 
 // https://www.goal.com/en/ajax/competition/matches/2kwbbcootiqqgmrzs6o5inle5?date=2023-09-18%2018%3A45%3A00&calendarId=1jt5mxgn4q5r6mknmlqv5qjh0

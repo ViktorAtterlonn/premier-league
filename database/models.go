@@ -32,5 +32,6 @@ type PeacockSchedule struct {
 	AwayTeam string `json:"awayTeam"`
 	Day      string `json:"day"`
 	Time     string `json:"time"`
+	Date     string `json:"date"`
 	IsReplay bool   `json:"isReplay"`
 }

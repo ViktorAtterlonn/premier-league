@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"scraper/database"
 	"scraper/utils"
+	"strings"
 	"text/template"
 	"time"
 
@@ -28,6 +29,8 @@ func NewHandler() *Handler {
 					"formatDate":               formatDate,
 					"getMatchElapsedPercent":   getMatchElapsedPercent,
 					"getMatchRemainingPercent": getMatchRemainingPercent,
+					"getDoesAirOnPeacock":      getDoesAirOnPeacock,
+					"getIsReplayOnPeacock":     getIsReplayOnPeacock,
 				},
 			},
 		}),
@@ -120,6 +123,42 @@ func getMatchElapsedPercent(timestamp string) int {
 	return minutes / 90 * 100
 }
 
+func getDoesAirOnPeacock(match database.Match, schedule []database.PeacockSchedule) bool {
+	for _, item := range schedule {
+		isHomeTeam := strings.Contains(match.HomeTeam, item.HomeTeam) || strings.Contains(getTeamNickName(match.HomeTeam), item.HomeTeam)
+		isAwayTeam := strings.Contains(match.AwayTeam, item.AwayTeam) || strings.Contains(getTeamNickName(match.AwayTeam), item.AwayTeam)
+		isSameTime := match.Date == item.Date
+
+		if isHomeTeam && isAwayTeam && isSameTime {
+			return true
+		}
+	}
+
+	return false
+}
+
+func getIsReplayOnPeacock(match database.Match, schedule []database.PeacockSchedule) bool {
+	for _, item := range schedule {
+		isHomeTeam := strings.Contains(match.HomeTeam, item.HomeTeam) || strings.Contains(getTeamNickName(match.HomeTeam), item.HomeTeam)
+		isAwayTeam := strings.Contains(match.AwayTeam, item.AwayTeam) || strings.Contains(getTeamNickName(match.AwayTeam), item.AwayTeam)
+		isSameTime := match.Date == item.Date
+
+		if isHomeTeam && isAwayTeam && isSameTime {
+			return item.IsReplay
+		}
+	}
+
+	return false
+}
+
+func getTeamNickName(teamName string) string {
+	if teamName == "Wolverhampton Wanderers" {
+		return "Wolves"
+	}
+
+	return teamName
+}
+
 func (h *Handler) SetDb(db *database.Database) {
 	h.db = db
 }
@@ -144,6 +183,7 @@ func (h *Handler) HandleRenderTeamsPage(w http.ResponseWriter, r *http.Request) 
 		"scoreboard":  h.db.GetScoreboard(),
 		"upcoming":    h.db.GetUpcomingMatches(),
 		"week":        h.db.GetMatchWeekNumber(),
+		"schedule":    h.db.GetPeacockSchedule(),
 	}
 
 	h.r.HTML(w, http.StatusOK, "index", data)

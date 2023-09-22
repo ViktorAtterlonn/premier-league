@@ -2,10 +2,12 @@ package scrapers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"scraper/database"
 	"scraper/utils"
 	"strings"
+	"time"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -48,7 +50,11 @@ func (s *Scraper) ScrapePeacockSchedule() {
 			HomeTeam: teams[0],
 			AwayTeam: teams[1],
 			Day:      e.ChildText("td:nth-child(1)"),
-			Time:     e.ChildText("td:nth-child(3)"),
+			Time:     convertEasternTimeToCET(e.ChildText("td:nth-child(3)")),
+			Date: combineAndConvertToTimestamp(
+				e.ChildText("td:nth-child(1)"),
+				e.ChildText("td:nth-child(3)"),
+			),
 			IsReplay: isReplay,
 		}
 
@@ -67,4 +73,37 @@ func (s *Scraper) ScrapePeacockSchedule() {
 
 	// Dump json to the standard output
 	enc.Encode(schedule)
+}
+
+func convertEasternTimeToCET(timeValue string) string {
+	// Parse the time value into a time.Time object in Eastern Time (ET)
+	layout := "03:04 PM"
+	location, _ := time.LoadLocation("America/New_York") // Eastern Time (ET) location
+	timeObj, err := time.ParseInLocation(layout, timeValue, location)
+	if err != nil {
+		return ""
+	}
+
+	// Add 6 hours to convert to Central European Time (CET)
+	cetTime := timeObj.Add(6 * time.Hour)
+	return cetTime.Format("15:04")
+}
+
+func combineAndConvertToTimestamp(day string, timeValue string) string {
+	// Get the current year
+	currentYear := time.Now().Year()
+
+	// Combine the "day" and "time" fields into a single string
+	datetimeStr := fmt.Sprintf("%s %d %s", day, currentYear, convertEasternTimeToCET(timeValue))
+
+	// Parse the combined datetime string into a time.Time value
+	layout := "Jan 02 2006 15:04"
+	datetime, err := time.Parse(layout, datetimeStr)
+	if err != nil {
+		return ""
+	}
+
+	// Format the datetime as a timestamp
+	timestamp := datetime.Format(time.RFC3339)
+	return timestamp
 }
