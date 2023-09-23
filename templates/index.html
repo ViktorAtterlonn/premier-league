@@ -24,12 +24,12 @@
           </div>
         </div>
         <div class="time text-white mb-2 text-xs font-semibold">
-          {{getMatchTime .date}}
+          {{getMatchTime .Date}}
         </div>
         <div class="progress">
           <div class="w-full flex gap-[2px]">
-            <div class="bg-primary w-[{{getMatchElapsedPercent .date}}%] h-[2px] rounded-[8px]"></div>
-            <div class="bg-gray-400/20 w-[{{getMatchRemainingPercent .date}}%] h-[2px] rounded-[8px]"></div>
+            <div class="bg-primary w-[{{getMatchElapsedPercent .Date}}%] h-[2px] rounded-[8px]"></div>
+            <div class="bg-gray-400/20 w-[{{getMatchRemainingPercent .Date}}%] h-[2px] rounded-[8px]"></div>
           </div>
         </div>
       </div>
